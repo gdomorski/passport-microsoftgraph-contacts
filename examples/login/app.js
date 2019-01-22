@@ -6,8 +6,8 @@ var express = require('express')
   , bodyParser = require('body-parser')
   , session = require('express-session');
 
-  var MICROSOFT_GRAPH_CLIENT_ID = "12826832-649d-478a-b9bd-7e794e37faef"
-  var MICROSOFT_GRAPH_CLIENT_SECRET = "hvkTEG58[}%oszzRKCO892]";
+  var MICROSOFT_GRAPH_CLIENT_ID = "--insert-client-id-here--"
+  var MICROSOFT_GRAPH_CLIENT_SECRET = "--insert-password-here--";
 
 
 // Passport session setup.

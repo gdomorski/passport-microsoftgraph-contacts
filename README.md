@@ -28,7 +28,7 @@ authenticate requests.
 For example, as route middleware in an [Express](http://expressjs.com/)
 application:
 
-    app.get('/auth/microsoft',
+    app.get('/auth/outlook',
       passport.authenticate('windowslive', { scope: [      
       'openid',
       'profile',
@@ -36,17 +36,12 @@ application:
       'https://outlook.office.com/contacts.read'] 
     }));
 
-    app.get('/auth/microsoft/callback', 
-      passport.authenticate('microsoft', { failureRedirect: '/login' }),
+    app.get('/auth/outlook/callback', 
+      passport.authenticate('windowslive', { failureRedirect: '/login' }),
       function(req, res) {
         // Successful authentication, redirect home.
         res.redirect('/');
       });
-
-## Credits
-
-  - [Jared Hanson](http://github.com/jaredhanson)
-  - [Novalina Nursalim](https://github.com/novalina)
 
 ## License
 
