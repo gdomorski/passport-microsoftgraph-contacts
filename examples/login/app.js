@@ -1,14 +1,13 @@
 var express = require('express')
   , passport = require('passport')
-  , WindowsLiveStrategy = require('passport-microsoftgraph-contacts').Strategy
-  , app = express()
+  , MicrosoftGraphStrategy = require('passport-microsoftgraph-contacts').Strategy
   , logger = require('morgan')
   , cookieParser = require('cookie-parser')
   , bodyParser = require('body-parser')
   , session = require('express-session');
 
-  var MICROSOFT_GRAPH_CLIENT_ID = "--insert-client-id-here--"
-  var MICROSOFT_GRAPH_CLIENT_SECRET = "--insert-client-secret-here";
+  var MICROSOFT_GRAPH_CLIENT_ID = "12826832-649d-478a-b9bd-7e794e37faef"
+  var MICROSOFT_GRAPH_CLIENT_SECRET = "hvkTEG58[}%oszzRKCO892]";
 
 
 // Passport session setup.
@@ -16,7 +15,7 @@ var express = require('express')
 //   serialize users into and deserialize users out of the session.  Typically,
 //   this will be as simple as storing the user ID when serializing, and finding
 //   the user by ID when deserializing.  However, since this example does not
-//   have a database of user records, the complete Windows Live profile is
+//   have a database of user records, the complete Microsoft Graph profile is
 //   serialized and deserialized.
 passport.serializeUser(function(user, done) {
   done(null, user);
@@ -26,26 +25,21 @@ passport.deserializeUser(function(obj, done) {
   done(null, obj);
 });
 
+var app = express()
 
-// Use the WindowsLiveStrategy within Passport.
+// Use the MicrosoftGraphStrategy within Passport.
 //   Strategies in Passport require a `verify` function, which accept
-//   credentials (in this case, an accessToken, refreshToken, and Windows Live
+//   credentials (in this case, an accessToken, refreshToken, and Microsoft Graph
 //   profile), and invoke a callback with a user object.
-passport.use(new WindowsLiveStrategy({
+passport.use(new MicrosoftGraphStrategy({
     clientID: MICROSOFT_GRAPH_CLIENT_ID,
     clientSecret: MICROSOFT_GRAPH_CLIENT_SECRET,
-    callbackURL: "http://localhost:3000/auth/outlook/callback"
+    callbackURL: "http://localhost:3000/auth/outlook/callback",
+    passReqToCallback: true,
   },
-  function(accessToken, refreshToken, profile, done) {
-    // asynchronous verification, for effect...
-    process.nextTick(function () {
-      
-      // To keep the example simple, the user's Windows Live profile is returned
-      // to represent the logged-in user.  In a typical application, you would
-      // want to associate the Windows Live account with a user record in your
-      // database, and return that user instead.
-      return done(null, profile);
-    });
+  function(request, token, tokenSecret, profile, done) {
+    request.session.outlook = { queryCode: request.query.code }
+    return done(null, profile)
   }
 ));
 
@@ -83,14 +77,21 @@ app.get('/login', function(req, res){
 
 // GET /auth/windowslive
 //   Use passport.authenticate() as route middleware to authenticate the
-//   request.  The first step in Windows Live authentication will involve
-//   redirecting the user to live.com.  After authorization, Windows Live
+//   request.  The first step in Microsoft Graph authentication will involve
+//   redirecting the user to live.com.  After authorization, Microsoft Graph
 //   will redirect the user back to this application at
 //   /auth/windowslive/callback
-app.get('/auth/windowslive',
-  passport.authenticate('windowslive', { scope: ['wl.signin', 'wl.basic', 'wl.contacts_emails'] }),
+app.get('/auth/outlook',
+  passport.authenticate('windowslive', {
+    scope: [
+    'openid',
+    'profile',
+    'offline_access',
+    'https://outlook.office.com/contacts.read'
+    ],
+  }),
   function(req, res){
-    // The request will be redirected to Windows Live for authentication, so
+    // The request will be redirected to Microsoft Graph for authentication, so
     // this function will not be called.
   });
 
@@ -99,7 +100,7 @@ app.get('/auth/windowslive',
 //   request.  If authentication fails, the user will be redirected back to the
 //   login page.  Otherwise, the primary route function function will be called,
 //   which, in this example, will redirect the user to the home page.
-app.get('/auth/windowslive/callback', 
+app.get('/auth/outlook/callback', 
   passport.authenticate('windowslive', { failureRedirect: '/login' }),
   function(req, res) {
     res.redirect('/');

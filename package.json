@@ -1,6 +1,6 @@
 {
   "name": "passport-microsoftgraph-contacts",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "description": "Microsoft Graph authentication strategy for Passport.",
   "keywords": [
     "passport",
@@ -15,10 +15,7 @@
     "authentication",
     "identity"
   ],
-  "author": {
-    "name": "Greg Domorski",
-    "email": "greg.domorski@gmail.com"
-  },
+  "author": "Greg Domorski <greg.domorski@gmail.com>",
   "repository": {
     "type": "git",
     "url": "git://github.com/gdomorski/passport-microsoftgraph-contacts.git"
@@ -34,7 +31,8 @@
   ],
   "main": "./lib",
   "dependencies": {
-    "passport-oauth2": "1.x.x"
+    "passport-oauth2": "1.x.x",
+    "request": "2.x.x"
   },
   "devDependencies": {
     "mocha": "1.x.x",
@@ -44,6 +42,12 @@
     "node": ">= 0.4.0"
   },
   "scripts": {
-    "test": "node_modules/.bin/mocha --reporter spec --require test/bootstrap/node test/*.test.js"
-  }
+    "test": "mocha --reporter spec --require test/bootstrap/node test/*.test.js"
+  },
+  "homepage": "https://github.com/gdomorski/passport-microsoftgraph-contacts#readme",
+  "directories": {
+    "example": "examples",
+    "lib": "lib"
+  },
+  "license": "ISC"
 }

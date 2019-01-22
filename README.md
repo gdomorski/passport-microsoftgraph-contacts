@@ -10,15 +10,13 @@ The Microsoft authentication strategy authenticates users using a Microsoft acco
 which accepts these credentials and calls `done` providing a user, as well as
 `options` specifying a client ID, client secret, and callback URL.
 
-    passport.use(new WindowsLiveStrategy({
+    passport.use(new MicrosoftStrategy({
         clientID: MICROSOFT_CLIENT_ID,
         clientSecret: MICROSOFT_CLIENT_SECRET,
         callbackURL: "http://www.example.com/auth/microsoft/callback"
       },
       function(accessToken, refreshToken, profile, done) {
-        User.findOrCreate({ windowsliveId: profile.id }, function (err, user) {
-          return done(err, user);
-        });
+
       }
     ));
 
@@ -31,7 +29,7 @@ For example, as route middleware in an [Express](http://expressjs.com/)
 application:
 
     app.get('/auth/microsoft',
-      passport.authenticate('microsoft', { scope: [      
+      passport.authenticate('windowslive', { scope: [      
       'openid',
       'profile',
       'offline_access',
